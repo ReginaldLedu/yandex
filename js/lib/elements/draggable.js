@@ -156,8 +156,8 @@ class Draggable extends HTMLElement {
       }
       draggableItem.addEventListener('mousedown', startMove);
       draggableItem.addEventListener('touchstart', event => {
-        event.preventDefault();
         startTouchMove();
+        event.preventDefault();
       });
       draggableItem.addEventListener('dragstart', dragStart);
     }
