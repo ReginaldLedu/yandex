@@ -9,6 +9,7 @@ stallSVG.innerHTML = `
 item-draggable {
   cursor: -webkit-grab;
   cursor: grab;
+  touch-action: none;
 }
 
 .stall__cart svg {

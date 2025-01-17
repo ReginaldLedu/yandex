@@ -35,7 +35,7 @@ class Draggable extends HTMLElement {
         function onTouchMove(event) {
           let touch = event.targetTouches[0];
           moveAt(touch.pageX, touch.pageY);
-          event.preventDefault();
+
         }
 
         document.addEventListener('touchmove', event => {
