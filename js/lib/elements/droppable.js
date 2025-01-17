@@ -46,17 +46,21 @@ class Droppable extends HTMLElement {
     this.shadowRoot.append(template.content.cloneNode(true));
   }
   static observedAttributes = ['data-quant'];
-  showButton() {
-    Number(this.getAttribute('data-quant')) >= 3
-      ? (this.shadowRoot.getElementById('pay').style.opacity = '1')
-      : (this.shadowRoot.getElementById('pay').style.opacity = '0');
+  buttonVisibility() {
+    const payButton = this.shadowRoot.getElementById('pay');
+    function showButton() {
+      payButton.style.opacity = '1';
+      payButton.style.visibility = 'visible';
+    }
+    function hideButton() {
+      payButton.style.opacity = '0';
+      payButton.style.visibility = 'hidden';
+    }
+    Number(this.getAttribute('data-quant')) >= 3 ? showButton() : hideButton();
   }
   render() {
     goodsForShelf1.forEach(item =>
-      createDraggableElement(
-        item,
-        this.shadowRoot.getElementById('shelf-1')
-      )
+      createDraggableElement(item, this.shadowRoot.getElementById('shelf-1'))
     );
     goodsForShelf2.forEach(item =>
       createDraggableElement(item, this.shadowRoot.getElementById('shelf-2'))
@@ -70,7 +74,7 @@ class Droppable extends HTMLElement {
     this.render();
   }
   attributeChangedCallback() {
-    this.showButton();
+    this.buttonVisibility();
   }
 }
 

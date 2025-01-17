@@ -89,6 +89,7 @@ item-draggable {
   background-color: #fce000;
   border-radius: 16px;
   opacity: 0;
+  visibility: hidden;
   line-height: 17px;
   font-size: 16px;
   border: none;
