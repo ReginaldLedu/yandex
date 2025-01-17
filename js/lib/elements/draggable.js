@@ -17,6 +17,70 @@ class Draggable extends HTMLElement {
       const draggableItemPrice = this.price;
       const draggableItemId = this.id;
       const draggableItemTemplate = this.template;
+      function startTouchMove(event) {
+        const shiftX =
+          event.clientX - draggableItem.getBoundingClientRect().left;
+        const shiftY =
+          event.clientY - draggableItem.getBoundingClientRect().top;
+        draggableItem.style.position = 'absolute';
+        draggableItem.style.cursor = 'grabbing';
+        draggableItem.style.zIndex = 1000;
+        document.body.append(draggableItem);
+        moveAt(event.pageX, event.pageY);
+        function moveAt(pageX, pageY) {
+          draggableItem.style.left = pageX - shiftX + 'px';
+          draggableItem.style.top = pageY - shiftY + 'px';
+        }
+
+        function onTouchMove(event) {
+          let touch = event.targetTouches[0];
+          moveAt(touch.pageX, touch.pageY);
+          // event.preventDefault();
+        }
+
+        draggableItem.addEventListener('touchmove', event => {
+          onTouchMove();
+          // event.preventDefault();
+        });
+        function endMove(event) {
+          const parent = root.host;
+          const cart = parent.shadowRoot.getElementById('cart');
+          const cartTop = cart.getBoundingClientRect().top + window.scrollY;
+          const cartBottom =
+            cart.getBoundingClientRect().bottom + window.scrollY;
+          const cartLeft = cart.getBoundingClientRect().left + window.scrollX;
+          const cartRight = cart.getBoundingClientRect().right + window.scrollX;
+          if (
+            event.pageY > cartTop &&
+            event.clientY < cartBottom &&
+            event.pageX > cartLeft &&
+            event.pageX < cartRight
+          ) {
+            document.removeEventListener('mousemove', onMouseMove);
+            draggableItem.removeEventListener('touchmove', onTouchMove);
+            const itemInCart = document.createElement('div');
+            itemInCart.setAttribute('data-price', draggableItemPrice);
+            itemInCart.setAttribute('data-id', draggableItemId);
+            cart.appendChild(itemInCart);
+            parent.dataset.quant = Array.from(cart.children).length;
+            draggableItem.style.cursor = 'grab';
+            draggableItem.style.zIndex = 0;
+          } else {
+            createDraggableElement(
+              {
+                template: draggableItemTemplate,
+                price: draggableItemPrice,
+                id: draggableItemId,
+              },
+              parentNode
+            );
+            draggableItem.remove();
+            draggableItem.removeEventListener('touchmove', onTouchMove);
+          }
+        }
+
+        draggableItem.addEventListener('touchend', endMove);
+      }
 
       function startMove(event) {
         const shiftX =
@@ -43,7 +107,7 @@ class Draggable extends HTMLElement {
         }
 
         document.addEventListener('mousemove', onMouseMove);
-        draggableItem.addEventListener('touchmove', (event) => {
+        draggableItem.addEventListener('touchmove', event => {
           onTouchMove();
           event.preventDefault();
         });
@@ -91,7 +155,10 @@ class Draggable extends HTMLElement {
         return false;
       }
       draggableItem.addEventListener('mousedown', startMove);
-      draggableItem.addEventListener('touchstart', startMove);
+      draggableItem.addEventListener('touchstart', event => {
+        event.preventDefault();
+        startTouchMove();
+      });
       draggableItem.addEventListener('dragstart', dragStart);
     }
   }
