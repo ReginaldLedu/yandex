@@ -18,10 +18,11 @@ class Draggable extends HTMLElement {
       const draggableItemId = this.id;
       const draggableItemTemplate = this.template;
       function startTouchMove(event) {
+        const touch = event.touches[0];
         const shiftX =
-          event.clientX - draggableItem.getBoundingClientRect().left;
+          touch.clientX - draggableItem.getBoundingClientRect().left;
         const shiftY =
-          event.clientY - draggableItem.getBoundingClientRect().top;
+          touch.clientY - draggableItem.getBoundingClientRect().top;
         draggableItem.style.position = 'absolute';
         draggableItem.style.cursor = 'grabbing';
         draggableItem.style.zIndex = 1000;
@@ -35,7 +36,6 @@ class Draggable extends HTMLElement {
         function onTouchMove(event) {
           let touch = event.targetTouches[0];
           moveAt(touch.pageX, touch.pageY);
-
         }
 
         document.addEventListener('touchmove', event => {
@@ -47,6 +47,8 @@ class Draggable extends HTMLElement {
           event.preventDefault();
         });
         function endMove(event) {
+          const touch = event.changedTouches[0];
+          console.log(touch);
           const parent = root.host;
           const cart = parent.shadowRoot.getElementById('cart');
           const cartTop = cart.getBoundingClientRect().top + window.scrollY;
@@ -54,14 +56,22 @@ class Draggable extends HTMLElement {
             cart.getBoundingClientRect().bottom + window.scrollY;
           const cartLeft = cart.getBoundingClientRect().left + window.scrollX;
           const cartRight = cart.getBoundingClientRect().right + window.scrollX;
+         
           if (
-            event.pageY > cartTop &&
-            event.clientY < cartBottom &&
-            event.pageX > cartLeft &&
-            event.pageX < cartRight
+            touch.pageY > cartTop &&
+            touch.clientY < cartBottom &&
+            touch.pageX > cartLeft &&
+            touch.pageX < cartRight
           ) {
-            document.removeEventListener('mousemove', onMouseMove);
-            draggableItem.removeEventListener('touchmove', onTouchMove);
+            // document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('touchmove', event => {
+              onTouchMove(event);
+              event.preventDefault();
+            });
+            draggableItem.removeEventListener('touchmove', event => {
+              onTouchMove(event);
+              event.preventDefault();
+            });
             const itemInCart = document.createElement('div');
             itemInCart.setAttribute('data-price', draggableItemPrice);
             itemInCart.setAttribute('data-id', draggableItemId);
@@ -83,13 +93,13 @@ class Draggable extends HTMLElement {
           }
         }
 
-        // draggableItem.addEventListener('touchend', event => {
-        //   endMove();
-        //   event.preventDefault();
-        // });
+        draggableItem.addEventListener('touchend', event => {
+          endMove(event);
+          event.preventDefault();
+        });
       }
       draggableItem.addEventListener('touchstart', event => {
-        startTouchMove();
+        startTouchMove(event);
         event.preventDefault();
       });
       function startMove(event) {
