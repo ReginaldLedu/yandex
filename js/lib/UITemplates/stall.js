@@ -22,7 +22,7 @@ item-draggable {
   z-index: -100;
   max-width: 199px;
   min-width: 199px;
-  min-height: 140px;
+  min-height: 120px;
 }
 
 .stall {

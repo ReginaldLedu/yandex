@@ -37,8 +37,10 @@ class Draggable extends HTMLElement {
         function onMouseMove(event) {
           moveAt(event.pageX, event.pageY);
         }
+
         document.addEventListener('mousemove', onMouseMove);
-        draggableItem.onmouseup = function (event) {
+        draggableItem.addEventListener('touchmove', onMouseMove);
+        function endMove(event) {
           const parent = root.host;
           const cart = parent.shadowRoot.getElementById('cart');
           const cartTop = cart.getBoundingClientRect().top + window.scrollY;
@@ -53,6 +55,7 @@ class Draggable extends HTMLElement {
             event.pageX < cartRight
           ) {
             document.removeEventListener('mousemove', onMouseMove);
+            draggableItem.removeEventListener('touchmove', onMouseMove);
             const itemInCart = document.createElement('div');
             itemInCart.setAttribute('data-price', draggableItemPrice);
             itemInCart.setAttribute('data-id', draggableItemId);
@@ -71,13 +74,17 @@ class Draggable extends HTMLElement {
             );
             draggableItem.remove();
             document.removeEventListener('mousemove', onMouseMove);
+            draggableItem.removeEventListener('touchmove', onMouseMove);
           }
-        };
+        }
+        draggableItem.addEventListener('mouseup', endMove);
+        draggableItem.addEventListener('touchend', endMove);
       }
       function dragStart() {
         return false;
       }
       draggableItem.addEventListener('mousedown', startMove);
+      draggableItem.addEventListener('touchstart', startMove);
       draggableItem.addEventListener('dragstart', dragStart);
     }
   }
