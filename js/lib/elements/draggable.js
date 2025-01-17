@@ -38,9 +38,9 @@ class Draggable extends HTMLElement {
           // event.preventDefault();
         }
 
-        draggableItem.addEventListener('touchmove', event => {
+        document.addEventListener('touchmove', event => {
           onTouchMove();
-          // event.preventDefault();
+          event.preventDefault();
         });
         function endMove(event) {
           const parent = root.host;
