@@ -32,7 +32,7 @@ class Draggable extends HTMLElement {
           draggableItem.style.left = pageX - shiftX + 'px';
           draggableItem.style.top = pageY - shiftY + 'px';
         }
-        
+
         function onTouchMove(event) {
           let touch = event.targetTouches[0];
           moveAt(touch.pageX, touch.pageY);
@@ -43,7 +43,10 @@ class Draggable extends HTMLElement {
         }
 
         document.addEventListener('mousemove', onMouseMove);
-        draggableItem.addEventListener('touchmove', onTouchMove);
+        draggableItem.addEventListener('touchmove', (event) => {
+          onTouchMove();
+          event.preventDefault();
+        });
         function endMove(event) {
           const parent = root.host;
           const cart = parent.shadowRoot.getElementById('cart');
