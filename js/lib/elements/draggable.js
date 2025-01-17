@@ -17,6 +17,7 @@ class Draggable extends HTMLElement {
       const draggableItemPrice = this.price;
       const draggableItemId = this.id;
       const draggableItemTemplate = this.template;
+
       function startMove(event) {
         const shiftX =
           event.clientX - draggableItem.getBoundingClientRect().left;
@@ -30,11 +31,11 @@ class Draggable extends HTMLElement {
         function moveAt(pageX, pageY) {
           draggableItem.style.left = pageX - shiftX + 'px';
           draggableItem.style.top = pageY - shiftY + 'px';
+          event.preventDefault();
         }
 
         function onMouseMove(event) {
           moveAt(event.pageX, event.pageY);
-          event.preventDefault();
         }
 
         document.addEventListener('mousemove', onMouseMove);
