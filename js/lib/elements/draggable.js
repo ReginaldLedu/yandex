@@ -18,8 +18,6 @@ class Draggable extends HTMLElement {
       const draggableItemId = this.id;
       const draggableItemTemplate = this.template;
       function startMove(event) {
-        const replaceAble = document.createElement('div');
-        replaceAble.style.width = draggableItem.offsetWidth + 'px';
         const shiftX =
           event.clientX - draggableItem.getBoundingClientRect().left;
         const shiftY =
@@ -36,6 +34,7 @@ class Draggable extends HTMLElement {
 
         function onMouseMove(event) {
           moveAt(event.pageX, event.pageY);
+          event.preventDefault();
         }
 
         document.addEventListener('mousemove', onMouseMove);
