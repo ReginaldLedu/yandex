@@ -31,15 +31,19 @@ class Draggable extends HTMLElement {
         function moveAt(pageX, pageY) {
           draggableItem.style.left = pageX - shiftX + 'px';
           draggableItem.style.top = pageY - shiftY + 'px';
+        }
+        
+        function onTouchMove(event) {
+          let touch = event.targetTouches[0];
+          moveAt(touch.pageX, touch.pageY);
           event.preventDefault();
         }
-
         function onMouseMove(event) {
           moveAt(event.pageX, event.pageY);
         }
 
         document.addEventListener('mousemove', onMouseMove);
-        draggableItem.addEventListener('touchmove', onMouseMove);
+        draggableItem.addEventListener('touchmove', onTouchMove);
         function endMove(event) {
           const parent = root.host;
           const cart = parent.shadowRoot.getElementById('cart');
@@ -55,7 +59,7 @@ class Draggable extends HTMLElement {
             event.pageX < cartRight
           ) {
             document.removeEventListener('mousemove', onMouseMove);
-            draggableItem.removeEventListener('touchmove', onMouseMove);
+            draggableItem.removeEventListener('touchmove', onTouchMove);
             const itemInCart = document.createElement('div');
             itemInCart.setAttribute('data-price', draggableItemPrice);
             itemInCart.setAttribute('data-id', draggableItemId);
@@ -74,7 +78,7 @@ class Draggable extends HTMLElement {
             );
             draggableItem.remove();
             document.removeEventListener('mousemove', onMouseMove);
-            draggableItem.removeEventListener('touchmove', onMouseMove);
+            draggableItem.removeEventListener('touchmove', onTouchMove);
           }
         }
         draggableItem.addEventListener('mouseup', endMove);
