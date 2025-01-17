@@ -35,16 +35,16 @@ class Draggable extends HTMLElement {
         function onTouchMove(event) {
           let touch = event.targetTouches[0];
           moveAt(touch.pageX, touch.pageY);
-          // event.preventDefault();
+          event.preventDefault();
         }
 
         document.addEventListener('touchmove', event => {
-          onTouchMove();
-          // event.preventDefault();
+          onTouchMove(event);
+          event.preventDefault();
         });
         draggableItem.addEventListener('touchmove', event => {
-          onTouchMove();
-          // event.preventDefault();
+          onTouchMove(event);
+          event.preventDefault();
         });
         function endMove(event) {
           const parent = root.host;
@@ -83,9 +83,15 @@ class Draggable extends HTMLElement {
           }
         }
 
-        draggableItem.addEventListener('touchend', endMove);
+        draggableItem.addEventListener('touchend', event => {
+          endMove();
+          event.preventDefault();
+        });
       }
-
+      draggableItem.addEventListener('touchstart', event => {
+        startTouchMove();
+        event.preventDefault();
+      });
       function startMove(event) {
         const shiftX =
           event.clientX - draggableItem.getBoundingClientRect().left;
@@ -153,16 +159,12 @@ class Draggable extends HTMLElement {
           }
         }
         draggableItem.addEventListener('mouseup', endMove);
-        draggableItem.addEventListener('touchend', endMove);
       }
       function dragStart() {
         return false;
       }
       draggableItem.addEventListener('mousedown', startMove);
-      draggableItem.addEventListener('touchstart', event => {
-        startTouchMove();
-        event.preventDefault();
-      });
+
       draggableItem.addEventListener('dragstart', dragStart);
     }
   }
