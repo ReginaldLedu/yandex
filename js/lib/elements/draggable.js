@@ -38,10 +38,10 @@ class Draggable extends HTMLElement {
           moveAt(touch.pageX, touch.pageY);
         }
 
-        document.addEventListener('touchmove', event => {
-          onTouchMove(event);
-          event.preventDefault();
-        });
+        // document.addEventListener('touchmove', event => {
+        //   onTouchMove(event);
+        //   event.preventDefault();
+        // });
         draggableItem.addEventListener('touchmove', event => {
           onTouchMove(event);
           event.preventDefault();
@@ -56,18 +56,17 @@ class Draggable extends HTMLElement {
             cart.getBoundingClientRect().bottom + window.scrollY;
           const cartLeft = cart.getBoundingClientRect().left + window.scrollX;
           const cartRight = cart.getBoundingClientRect().right + window.scrollX;
-         
+
           if (
             touch.pageY > cartTop &&
             touch.clientY < cartBottom &&
             touch.pageX > cartLeft &&
             touch.pageX < cartRight
           ) {
-            // document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('touchmove', event => {
-              onTouchMove(event);
-              event.preventDefault();
-            });
+            // document.removeEventListener('touchmove', event => {
+            //   onTouchMove(event);
+            //   event.preventDefault();
+            // });
             draggableItem.removeEventListener('touchmove', event => {
               onTouchMove(event);
               event.preventDefault();
@@ -97,6 +96,10 @@ class Draggable extends HTMLElement {
           endMove(event);
           // event.preventDefault();
         });
+        // document.addEventListener('touchend', event => {
+        //   endMove(event);
+        //   // event.preventDefault();
+        // });
       }
       draggableItem.addEventListener('touchstart', event => {
         startTouchMove(event);
@@ -127,10 +130,7 @@ class Draggable extends HTMLElement {
         }
 
         document.addEventListener('mousemove', onMouseMove);
-        draggableItem.addEventListener('touchmove', event => {
-          onTouchMove();
-          event.preventDefault();
-        });
+
         function endMove(event) {
           const parent = root.host;
           const cart = parent.shadowRoot.getElementById('cart');
@@ -146,7 +146,7 @@ class Draggable extends HTMLElement {
             event.pageX < cartRight
           ) {
             document.removeEventListener('mousemove', onMouseMove);
-            draggableItem.removeEventListener('touchmove', onTouchMove);
+
             const itemInCart = document.createElement('div');
             itemInCart.setAttribute('data-price', draggableItemPrice);
             itemInCart.setAttribute('data-id', draggableItemId);
@@ -165,7 +165,6 @@ class Draggable extends HTMLElement {
             );
             draggableItem.remove();
             document.removeEventListener('mousemove', onMouseMove);
-            draggableItem.removeEventListener('touchmove', onTouchMove);
           }
         }
         draggableItem.addEventListener('mouseup', endMove);
