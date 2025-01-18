@@ -38,17 +38,14 @@ class Draggable extends HTMLElement {
           moveAt(touch.pageX, touch.pageY);
         }
 
-        // document.addEventListener('touchmove', event => {
-        //   onTouchMove(event);
-        //   event.preventDefault();
-        // });
+ 
         draggableItem.addEventListener('touchmove', event => {
           onTouchMove(event);
           event.preventDefault();
         });
         function endMove(event) {
           const touch = event.changedTouches[0];
-          console.log(touch);
+  
           const parent = root.host;
           const cart = parent.shadowRoot.getElementById('cart');
           const cartTop = cart.getBoundingClientRect().top + window.scrollY;
@@ -94,12 +91,9 @@ class Draggable extends HTMLElement {
 
         draggableItem.addEventListener('touchend', event => {
           endMove(event);
-          // event.preventDefault();
+         
         });
-        // document.addEventListener('touchend', event => {
-        //   endMove(event);
-        //   // event.preventDefault();
-        // });
+       
       }
       draggableItem.addEventListener('touchstart', event => {
         startTouchMove(event);
@@ -120,11 +114,7 @@ class Draggable extends HTMLElement {
           draggableItem.style.top = pageY - shiftY + 'px';
         }
 
-        function onTouchMove(event) {
-          let touch = event.targetTouches[0];
-          moveAt(touch.pageX, touch.pageY);
-          event.preventDefault();
-        }
+       
         function onMouseMove(event) {
           moveAt(event.pageX, event.pageY);
         }
